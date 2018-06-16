@@ -1,8 +1,8 @@
 # Template to perform linear regression and logistic regression with Scikit-learn and pandas 
 # Parameters are definied in "Define hyperparameters and models, and applicable datasets"
-
 import matplotlib.pyplot as plt
 import pandas as pd
+import sklearn_helper
 
 def sklearn_linear_model(x_pd_dataframe, y_pd_series, mode = 'reg', regular_mode = 'simple', regular_param = 1.0):
     from sklearn.model_selection import train_test_split
@@ -56,27 +56,12 @@ def main():
                         #             'boston' is dataset as regression example to predict Boston housing price
 
 
-    #================================ Applicable scikit-learn datasets
-    if dataset == 'breast_cancer':
-        from sklearn.datasets import load_breast_cancer   ### Binary classification example  
-        sklearnDataset = load_breast_cancer()
-    elif dataset == 'iris':
-        from sklearn.datasets import load_iris    ### Multiclass classification example  
-        sklearnDataset = load_iris()
-    elif dataset == 'boston':
-        from sklearn.datasets import load_boston   ### Regression example
-        sklearnDataset = load_boston()
-    else:
-        raise Exception('Invalid dataset: ', dataset)
 
-    #================================ Code starts
-    print("========== Information of dataset")
-    print("Feature: shape = {}\nFeature names: {}".format(sklearnDataset.data.shape, sklearnDataset.feature_names))
-    if hasattr(sklearnDataset, 'target_names'):
-        print("Target: shape = {}\nTarget names: {}".format(sklearnDataset.target.shape, sklearnDataset.target_names))
+    sklearn_dataset = sklearn_helper.sklearn_dataset_selector(dataset)
+    sklearn_helper.sklearn_dataset_info_print(sklearn_dataset)
 
-    x_pd_dataframe = pd.DataFrame(sklearnDataset.data, columns = sklearnDataset.feature_names)
-    y_pd_series = pd.Series(sklearnDataset.target)
+    x_pd_dataframe = pd.DataFrame(sklearn_dataset.data, columns = sklearn_dataset.feature_names)
+    y_pd_series = pd.Series(sklearn_dataset.target)
 
     sklearn_linear_model(x_pd_dataframe, y_pd_series, mode = mode,  regular_mode=reg_mode, regular_param =reg_param)
 
